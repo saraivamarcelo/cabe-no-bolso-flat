@@ -1,0 +1,29 @@
+// Figura 1 do relatório: classes do modelo (domínio).
+digraph Modelo {
+  rankdir=TB;
+  nodesep=0.35;
+  ranksep=0.65;
+  dpi=200;
+  fontname="Helvetica";
+  node [shape=record, fontname="Helvetica", fontsize=11, style=filled, fillcolor="#FFFFFF", margin="0.10,0.06"];
+  edge [fontname="Helvetica", fontsize=10, labeldistance=1.6, labelangle=-25];
+
+  Planejamento [label="{Planejamento|- nome : String\l- participantes : TreeMap\<Integer, Participante\>\l- despesas : ArrayList\<Despesa\>\l|+ cadastrarParticipante(codigo, nome, orcamento) : Participante\l+ alterarParticipante(codigo, nome, orcamento) : void\l+ excluirParticipante(codigo : int) : void\l+ incluirDespesa(tipo, descricao, valor, codigos,\l      essencial, prioridade) : Despesa\l+ editarDespesa(indice, ...) : Despesa\l+ excluirDespesa(indice : int) : void\l+ getParticipantes() : List\<Participante\>\l+ getDespesas() : List\<Despesa\>\l+ resumo() : Resumo\l}", fillcolor="#E8F0FE"];
+
+  Participante [label="{Participante|- codigo : int \{imutável\}\l- nome : String\l- orcamento : long  (centavos)\l|+ atualizar(nome : String, orcamento : long) : void\l+ getCodigo() : int\l+ getNome() : String\l+ getOrcamento() : long\l+ compareTo(outro : Participante) : int\l}"];
+
+  Despesa [label="{\<\<abstract\>\>\nDespesa|- descricao : String\l- valor : long  (centavos)\l- participantes : TreeSet\<Participante\>\l- essencial : boolean\l- prioridade : int\l|+ ratear() : Map\<Participante, Long\>  \{abstract\}\l+ custoTotal() : long  \{abstract\}\l+ getTipo() : TipoDespesa  \{abstract\}\l+ contribuicaoDe(p : Participante) : long\l+ getParticipantes() : SortedSet\<Participante\>\l+ isEssencial() : boolean\l}", fillcolor="#E8F0FE"];
+
+  DespesaFixa [label="{DespesaFixa||+ ratear() : Map\<Participante, Long\>\l+ custoTotal() : long\l+ getTipo() : TipoDespesa\l}"];
+  DespesaPorPessoa [label="{DespesaPorPessoa||+ ratear() : Map\<Participante, Long\>\l+ custoTotal() : long\l+ getTipo() : TipoDespesa\l}"];
+  TipoDespesa [label="{\<\<enumeration\>\>\nTipoDespesa|FIXA\lPOR_PESSOA\l}"];
+
+  {rank=same; DespesaFixa; DespesaPorPessoa; TipoDespesa;}
+
+  Planejamento -> Participante [dir=both, arrowtail=diamond, arrowhead=none, taillabel="1", headlabel="0..*", label=" participantes "];
+  Planejamento -> Despesa [dir=both, arrowtail=diamond, arrowhead=none, taillabel="1", headlabel="0..*", label=" despesas "];
+  Participante -> Despesa [dir=back, arrowtail=vee, arrowhead=none, taillabel="1..*", headlabel="0..*", label=" envolvidos "];
+  DespesaFixa -> Despesa [arrowhead=empty];
+  DespesaPorPessoa -> Despesa [arrowhead=empty];
+  Despesa -> TipoDespesa [arrowhead=vee, style=dashed, label=" getTipo() "];
+}

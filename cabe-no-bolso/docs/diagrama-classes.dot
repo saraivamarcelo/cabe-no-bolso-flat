@@ -1,0 +1,71 @@
+digraph CabeNoBolso {
+  rankdir=TB;
+  nodesep=0.45;
+  ranksep=0.7;
+  fontname="Helvetica";
+  node [shape=record, fontname="Helvetica", fontsize=9, style=filled, fillcolor="#FFFFFF"];
+  edge [fontname="Helvetica", fontsize=8];
+
+  subgraph cluster_view {
+    label="pacote view (V)"; style=dashed; color="#7B1FA2"; fontsize=10;
+    JanelaPrincipal [label="{JanelaPrincipal|- controller : PlanejamentoController\l- painelParticipantes : PainelParticipantes\l- painelDespesas : PainelDespesas\l- painelResumo : PainelResumo\l- painelSimulador : PainelSimulador\l|+ atualizarTudo() : void\l- salvar() : void\l- abrir() : void\l}"];
+    PainelParticipantes [label="{PainelParticipantes|- controller : PlanejamentoController\l|~ atualizar() : void\l}"];
+    PainelDespesas [label="{PainelDespesas|- controller : PlanejamentoController\l|~ atualizar() : void\l}"];
+    PainelResumo [label="{PainelResumo|- controller : PlanejamentoController\l|~ atualizar() : void\l}"];
+    PainelSimulador [label="{PainelSimulador|- controller : PlanejamentoController\l|- simular() : void\l~ atualizar() : void\l}"];
+  }
+
+  subgraph cluster_controller {
+    label="pacote controller (C)"; style=dashed; color="#00796B"; fontsize=10;
+    PlanejamentoController [label="{PlanejamentoController|- planejamento : Planejamento\l- fabricaRepositorio : Function\<File, RepositorioPlanejamento\>\l|+ cadastrarParticipante(codigo, nome, orcamento : String) : void\l+ alterarParticipante(codigo, nome, orcamento : String) : void\l+ excluirParticipante(codigo : String) : void\l+ incluirDespesa(tipo, descricao, valor, codigos, essencial, prioridade) : void\l+ editarDespesa(indice, ...) : void\l+ excluirDespesa(indice : int) : void\l+ resumo() : Resumo\l+ simular() : ResultadoSimulacao\l+ salvar(arquivo : File) : void\l+ carregar(arquivo : File) : void\l}"];
+  }
+
+  subgraph cluster_model {
+    label="pacote model (M)"; style=dashed; color="#1565C0"; fontsize=10;
+    Planejamento [label="{Planejamento|- serialVersionUID : long\l- nome : String\l- participantes : TreeMap\<Integer, Participante\>\l- despesas : ArrayList\<Despesa\>\l|+ cadastrarParticipante(codigo, nome, orcamento) : Participante\l+ alterarParticipante(codigo, nome, orcamento) : void\l+ excluirParticipante(codigo : int) : void\l+ incluirDespesa(tipo, descricao, valor, codigos, essencial, prioridade) : Despesa\l+ editarDespesa(indice, ...) : Despesa\l+ excluirDespesa(indice : int) : void\l+ getParticipantes() : List\<Participante\>\l+ getDespesas() : List\<Despesa\>\l+ resumo() : Resumo\l}"];
+    Participante [label="{Participante|- serialVersionUID : long\l- codigo : int\l- nome : String\l- orcamento : long (centavos)\l|+ atualizar(nome : String, orcamento : long) : void\l+ getCodigo() : int\l+ getNome() : String\l+ getOrcamento() : long\l+ compareTo(outro : Participante) : int\l}"];
+    Despesa [label="{\<\<abstract\>\>\nDespesa|- serialVersionUID : long\l- descricao : String\l- valor : long (centavos)\l- participantes : TreeSet\<Participante\>\l- essencial : boolean\l- prioridade : int\l|+ ratear() : Map\<Participante, Long\> \{abstract\}\l+ custoTotal() : long \{abstract\}\l+ getTipo() : TipoDespesa \{abstract\}\l+ contribuicaoDe(p : Participante) : long\l+ getParticipantes() : SortedSet\<Participante\>\l}", fillcolor="#E3F2FD"];
+    DespesaFixa [label="{DespesaFixa||+ ratear() : Map\<Participante, Long\>\l+ custoTotal() : long\l+ getTipo() : TipoDespesa\l}"];
+    DespesaPorPessoa [label="{DespesaPorPessoa||+ ratear() : Map\<Participante, Long\>\l+ custoTotal() : long\l+ getTipo() : TipoDespesa\l}"];
+    TipoDespesa [label="{\<\<enumeration\>\>\nTipoDespesa|FIXA\lPOR_PESSOA\l}"];
+    Resumo [label="{Resumo|- linhas : List\<Linha\>\l- despesas : List\<Despesa\>\l- custoTotal : long\l|+ calcular(participantes, despesas) : Resumo \{static\}\l+ getLinha(codigo : int) : Linha\l}"];
+    Linha [label="{Resumo.Linha|- codigo : int\l- nome : String\l- orcamento : long\l- total : long\l- porDespesa : List\<Long\>\l|+ getExcesso() : long\l+ isDentroDoOrcamento() : boolean\l}"];
+    Simulador [label="{Simulador|+ MAX_OPCIONAIS : int = 10\l|+ simular(p : Planejamento) : ResultadoSimulacao \{static\}\l}"];
+    ResultadoSimulacao [label="{ResultadoSimulacao|- viavel : boolean\l- mantidas : List\<Despesa\>\l- retiradas : List\<Despesa\>\l- novoResumo : Resumo\l- prioridadeTotal : long\l|+ isViavel() : boolean\l}"];
+    RegraNegocioException [label="{RegraNegocioException|}"];
+  }
+
+  subgraph cluster_persistence {
+    label="pacote persistence"; style=dashed; color="#EF6C00"; fontsize=10;
+    RepositorioPlanejamento [label="{\<\<interface\>\>\nRepositorioPlanejamento||+ salvar(p : Planejamento) : void\l+ carregar() : Planejamento\l}", fillcolor="#FFF3E0"];
+    ArquivoPlanejamentoRepository [label="{ArquivoPlanejamentoRepository|- arquivo : File\l|+ salvar(p : Planejamento) : void\l+ carregar() : Planejamento\l}"];
+    PersistenciaException [label="{PersistenciaException|}"];
+  }
+
+  // Herança e realização
+  DespesaFixa -> Despesa [arrowhead=empty];
+  DespesaPorPessoa -> Despesa [arrowhead=empty];
+  ArquivoPlanejamentoRepository -> RepositorioPlanejamento [arrowhead=empty, style=dashed];
+
+  // Composição / agregação / associação com multiplicidades
+  Planejamento -> Participante [arrowtail=diamond, dir=both, arrowhead=none, headlabel="0..*", taillabel="1", label="participantes"];
+  Planejamento -> Despesa [arrowtail=diamond, dir=both, arrowhead=none, headlabel="0..*", taillabel="1", label="despesas"];
+  Despesa -> Participante [arrowhead=vee, headlabel="1..*", taillabel="0..*", label="envolvidos"];
+  Despesa -> TipoDespesa [arrowhead=vee, style=dashed, label="getTipo()"];
+  Resumo -> Linha [arrowtail=diamond, dir=both, arrowhead=none, headlabel="0..*", taillabel="1"];
+  Resumo -> Despesa [arrowhead=vee, headlabel="0..*", label="usa"];
+  Planejamento -> Resumo [arrowhead=vee, style=dashed, label="cria"];
+  Simulador -> Planejamento [arrowhead=vee, style=dashed, label="lê"];
+  Simulador -> ResultadoSimulacao [arrowhead=vee, style=dashed, label="cria"];
+  ResultadoSimulacao -> Resumo [arrowhead=vee, headlabel="1"];
+
+  // MVC
+  PlanejamentoController -> Planejamento [arrowhead=vee, headlabel="1", label="modelo"];
+  PlanejamentoController -> RepositorioPlanejamento [arrowhead=vee, style=dashed, label="usa (interface)"];
+  PlanejamentoController -> Simulador [arrowhead=vee, style=dashed];
+  JanelaPrincipal -> PlanejamentoController [arrowhead=vee, headlabel="1", label="controlador"];
+  JanelaPrincipal -> PainelParticipantes [arrowtail=diamond, dir=both, arrowhead=none];
+  JanelaPrincipal -> PainelDespesas [arrowtail=diamond, dir=both, arrowhead=none];
+  JanelaPrincipal -> PainelResumo [arrowtail=diamond, dir=both, arrowhead=none];
+  JanelaPrincipal -> PainelSimulador [arrowtail=diamond, dir=both, arrowhead=none];
+}

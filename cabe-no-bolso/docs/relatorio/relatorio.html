@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cabe no bolso: planejador de despesas compartilhadas</title>
+<style>
+  /* Formato: A4, margens ABNT (3 cm esquerda/superior, 2 cm direita/inferior), uma coluna.
+     Campos em amarelo (classe "pend") são da equipe: preencha e remova a marca <mark>. */
+  @page { size: A4; margin: 3cm 2cm 2cm 3cm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Times New Roman", "Liberation Serif", Times, serif; font-size: 11pt; line-height: 1.3;
+         text-align: justify; margin: 0; color: #000; hyphens: auto; }
+  mark.pend { background: #fff176; color: #000; padding: 0 2px; }
+  h1 { font-size: 14pt; text-align: center; margin: 0 0 4pt; line-height: 1.2; }
+  .sub { text-align: center; font-size: 11pt; margin: 0 0 8pt; }
+  .autores { text-align: center; font-size: 10.5pt; margin: 0 0 6pt; line-height: 1.25; }
+  .resumo { font-size: 10pt; line-height: 1.2; margin: 6pt 0 8pt 4cm; text-align: justify; border-left: 2px solid #999; padding-left: 8pt; }
+  .resumo p { margin: 0 0 3pt; text-indent: 0; }
+  h2 { font-size: 11.5pt; text-transform: uppercase; margin: 12pt 0 4pt; break-after: avoid; }
+  h3 { font-size: 11pt; margin: 8pt 0 3pt; break-after: avoid; }
+  p { margin: 0 0 5pt; text-indent: 1.25cm; }
+  p.sem { text-indent: 0; }
+  ul { margin: 0 0 5pt; padding-left: 1.2cm; }
+  li { margin-bottom: 1.5pt; }
+  figure { margin: 6pt 0 8pt; text-align: center; break-inside: avoid; }
+  figcaption.cap, .cap { font-size: 10pt; line-height: 1.2; text-align: center; margin: 0 0 3pt; font-weight: normal; text-indent: 0; }
+  .fonte { font-size: 9pt; text-align: center; margin: 2pt 0 0; text-indent: 0; }
+  figure img { display: block; margin: 0 auto; border: 0.5pt solid #bbb; }
+  table { border-collapse: collapse; width: 100%; font-size: 9pt; line-height: 1.15; margin: 0 0 2pt; }
+  th { border-top: 1pt solid #000; border-bottom: 0.75pt solid #000; text-align: left; padding: 2pt 3pt; vertical-align: bottom; }
+  td { padding: 2pt 3pt; vertical-align: top; border-bottom: 0.4pt solid #bbb; text-align: left; }
+  tr:last-child td { border-bottom: 1pt solid #000; }
+  tr { break-inside: avoid; }
+  td.n, th.n { text-align: right; white-space: nowrap; }
+  .tab { margin: 6pt 0 8pt; }
+  .tab .cap { break-after: avoid; }
+  .ok { font-weight: bold; }
+  code { font-family: "Liberation Mono", "Courier New", monospace; font-size: 9pt; }
+  .refs p { text-indent: 0; text-align: left; margin-bottom: 4pt; font-size: 10pt; line-height: 1.2; }
+  .quebra { break-before: page; }
+  .evitar { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ===================== PÁGINA 1: título, autores, objetivo, link ===================== -->
+<h1>Cabe no bolso: planejador de despesas compartilhadas em Java</h1>
+<p class="sub">Relatório técnico da atividade final de Programação Orientada a Objetos</p>
+
+<div class="autores">
+  <b>Grupo 10</b> · Universidade de Fortaleza (Unifor) – EAD · Programação Orientada a Objetos · novembro de 2026
+</div>
+<table style="width: 11cm; margin: 0 auto 3pt; font-size: 9.5pt; line-height: 1.05;">
+  <tr><th>Integrantes</th><th style="width: 2.6cm;">Matrícula</th></tr>
+  <tr><td>Marcelo de Oliveira Saraiva</td><td>2641741</td></tr>
+  <tr><td><mark class="pend">[NOME COMPLETO DO INTEGRANTE 2]</mark></td><td><mark class="pend">[0000000]</mark></td></tr>
+  <tr><td><mark class="pend">[NOME COMPLETO DO INTEGRANTE 3]</mark></td><td><mark class="pend">[0000000]</mark></td></tr>
+  <tr><td><mark class="pend">[NOME COMPLETO DO INTEGRANTE 4]</mark></td><td><mark class="pend">[0000000]</mark></td></tr>
+</table>
+<div class="autores">
+  <mark class="pend">[acrescente ou remova linhas da tabela: equipes de 4 a 6 integrantes]</mark><br>
+  Repositório no GitHub: <mark class="pend">[https://github.com/USUARIO/REPOSITORIO]</mark>
+</div>
+
+<div class="resumo">
+  <p><b>Objetivo.</b> Desenvolver e validar uma aplicação Java com interface Swing que planeja despesas de uma
+  atividade em grupo: cadastra participantes e despesas fixas ou por pessoa, rateia os custos em centavos
+  exatos, informa o total de cada participante e se ele respeita o orçamento, salva e recupera o planejamento
+  em arquivo e, como extensão, sugere quais despesas opcionais manter para que todos fiquem dentro do orçamento.</p>
+  <p><b>Palavras-chave:</b> programação orientada a objetos; Java; Swing; MVC; serialização.</p>
+</div>
+
+<h2>1 Apresentação</h2>
+<p>Ao organizar um passeio, um grupo costuma dividir os gastos de maneira improvisada e só percebe no fim que
+alguém gastou mais do que podia. Algumas despesas são divididas entre todos, outras envolvem só parte do grupo;
+um transporte tem valor fixo, uma refeição é cobrada por pessoa. O <i>Cabe no bolso</i> representa essas
+diferenças, recalcula tudo a cada alteração e mostra, para cada participante, se o total cabe no orçamento e
+quanto excede.</p>
+<p>O público são grupos de amigos ou colegas que planejam uma atividade com orçamentos individuais limitados e
+precisam de uma ferramenta simples, sem instalação nem conexão. O escopo é um planejamento por vez, em reais,
+com divisão igualitária entre os selecionados; ficam fora pagamentos, divisão percentual e uso multiusuário.
+Além do caso de referência do enunciado (Ana, Bruno e Carla), a equipe criou o cenário fictício
+&ldquo;Dia de praia&rdquo; (quatro participantes, seis despesas) para exercitar centavos, participação seletiva e o simulador.</p>
+
+<!-- ===================== 2 MODELAGEM ===================== -->
+<h2>2 Modelagem e organização</h2>
+<p>A Figura 1 mostra o modelo. <code>Planejamento</code> é a raiz: possui os participantes (em um
+<code>TreeMap</code> indexado pelo código) e as despesas (em um <code>ArrayList</code>) e concentra as operações
+de cadastro, consulta e atualização. <code>Despesa</code> é abstrata e tem duas subclasses,
+<code>DespesaFixa</code> e <code>DespesaPorPessoa</code>, que sobrescrevem <code>ratear()</code> e
+<code>custoTotal()</code>. A notação segue Fowler (2005).</p>
+
+<p><b>Relações.</b> <code>Planejamento</code> compõe (losango cheio) participantes e despesas, pois ambos só
+existem dentro de um planejamento e deixam de existir com ele. <code>Despesa</code> se associa a 1..*
+<code>Participante</code> e guarda <i>referências para os mesmos objetos</i> do planejamento, não cópias; assim,
+alterar nome ou orçamento de alguém se reflete em todas as despesas e o resumo é recalculado sem sincronização
+manual. A navegação é unidirecional, o que explica a regra que impede excluir um participante com despesa vinculada.</p>
+<p><b>Encapsulamento.</b> Todos os atributos são privados. <code>Despesa</code> é imutável: &ldquo;editar&rdquo;
+uma despesa cria uma nova, validada, que só então substitui a antiga; assim uma edição inválida nunca deixa o
+estado pela metade. Os construtores validam e <code>getParticipantes()</code> devolve visão não modificável. <b>Herança e polimorfismo.</b> <code>Resumo.calcular</code>
+percorre uma <code>List&lt;Despesa&gt;</code> e chama <code>contribuicaoDe()</code> e <code>custoTotal()</code>
+sem conhecer o tipo concreto; o tipo só é escolhido na fábrica <code>Planejamento.criarDespesa</code>. A
+Tabela 1 resume as responsabilidades.</p>
+
+<div class="tab evitar">
+  <div class="cap">Tabela 1 – Responsabilidades das classes principais</div>
+  <table>
+    <tr><th style="width:27%">Classe (pacote)</th><th>Responsabilidade</th></tr>
+    <tr><td><code>Planejamento</code> (model)</td><td>Raiz do modelo; cadastra, altera e exclui participantes e despesas; valida antes de alterar.</td></tr>
+    <tr><td><code>Participante</code> (model)</td><td>Código imutável e único, nome e orçamento em centavos; valida os próprios dados.</td></tr>
+    <tr><td><code>Despesa</code>, <code>DespesaFixa</code>, <code>DespesaPorPessoa</code> (model)</td><td>Descrição, valor, participantes e classificação; cada subclasse implementa o rateio.</td></tr>
+    <tr><td><code>Resumo</code> (model)</td><td>Calcula custo total, total individual, excesso e situação; nunca é guardado.</td></tr>
+    <tr><td><code>Simulador</code> (model)</td><td>Objetivo extra: escolhe as opcionais a manter sem alterar o original.</td></tr>
+    <tr><td><code>PlanejamentoController</code> (controller)</td><td>Converte textos em tipos do modelo, encaminha a ação e repassa as exceções à visão.</td></tr>
+    <tr><td><code>JanelaPrincipal</code> e painéis (view)</td><td>Swing: recebem entradas e mostram resultados e mensagens; não calculam.</td></tr>
+    <tr><td><code>RepositorioPlanejamento</code> / <code>ArquivoPlanejamentoRepository</code> (persistence)</td><td>Contrato de salvar/carregar e implementação por serialização em arquivo.</td></tr>
+  </table>
+  <div class="fonte">Fonte: os autores (2026).</div>
+</div>
+
+<figure>
+  <div class="cap">Figura 1 – Diagrama de classes do modelo</div>
+  <img src="../diagrama-modelo.png" alt="Diagrama de classes do modelo" style="width: 8.6cm;">
+  <div class="fonte">Fonte: os autores (2026). Diagrama completo em docs/diagrama-classes.png.</div>
+</figure>
+
+<h3>2.1 Organização MVC</h3>
+<p>O código está em pacotes <code>model</code>, <code>view</code>, <code>controller</code>,
+<code>persistence</code> e <code>util</code> (Figura 2). Exemplo de fluxo, &ldquo;Incluir despesa&rdquo;: o
+<i>ActionListener</i> do botão em <code>PainelDespesas</code> lê os campos como texto e chama o controlador;
+este converte o valor com <code>Dinheiro.parse</code> e chama <code>Planejamento.incluirDespesa</code>; o modelo
+valida e cria a despesa. Em caso de sucesso, a visão chama <code>atualizarTudo()</code> e cada aba relê os dados
+do controlador. Em caso de falha, o modelo lança <code>RegraNegocioException</code> com mensagem pronta para o
+usuário, a visão a exibe em caixa de diálogo e nada foi alterado. O controlador conhece apenas a <i>interface</i>
+<code>RepositorioPlanejamento</code> (recebe uma fábrica), então a persistência pode ser trocada sem mexer no
+restante.</p>
+
+<figure>
+  <div class="cap">Figura 2 – Organização MVC, persistência e resumo</div>
+  <img src="../diagrama-mvc.png" alt="Diagrama MVC" style="width: 9.2cm;">
+  <div class="fonte">Fonte: os autores (2026). (V) visão, (C) controlador, (M) modelo.</div>
+</figure>
+
+<!-- ===================== 3 IMPLEMENTAÇÃO ===================== -->
+<h2>3 Implementação</h2>
+<h3>3.1 Funcionalidades, cálculos e validações</h3>
+<p>A interface tem quatro abas: <i>Participantes</i> (cadastrar, alterar nome e orçamento, excluir),
+<i>Despesas</i> (incluir, editar e excluir, escolhendo tipo e participantes), <i>Resumo</i> (despesas, custo total,
+total individual e situação) e <i>Simulador</i>; o menu <i>Arquivo</i> salva, abre e inicia planejamentos.
+O layout usa <code>BorderLayout</code>, <code>GridBagLayout</code> e <code>FlowLayout</code> e as ações são
+tratadas por <i>listeners</i> (DEITEL; DEITEL, 2017; ORACLE, [s.d.]a).</p>
+<p><b>Centavos.</b> Todo valor é um <code>long</code> em centavos, sem <code>double</code> (BLOCH, 2018). No
+rateio fixo, cada selecionado paga <code>valor / n</code> e os <code>valor % n</code> centavos restantes vão, um
+a cada pessoa, aos primeiros selecionados em ordem crescente de código (o <code>TreeSet</code> já itera nessa
+ordem). Na despesa por pessoa, cada selecionado paga o valor unitário e o custo da despesa é unitário × número de
+selecionados. O total individual soma as contribuições (zero se não participa); está dentro do orçamento se
+total ≤ orçamento, e o excesso é total − orçamento. <b>Validações.</b> São recusados, com mensagem e sem
+alterar o estado: campos vazios, código duplicado, não numérico ou não positivo, nome vazio, orçamento negativo,
+valor ≤ 0 ou com mais de duas casas, despesa sem participantes, participante inexistente ou repetido,
+índice de despesa inexistente e exclusão de participante com despesa vinculada. O campo de valor aceita
+<code>70</code>, <code>70,5</code>, <code>70.50</code> e <code>R$ 1.234,56</code>.</p>
+
+<h3>3.2 Coleções genéricas</h3>
+<div class="tab evitar">
+  <div class="cap">Tabela 2 – Coleções utilizadas e justificativa</div>
+  <table>
+    <tr><th style="width:36%">Coleção</th><th>Por que foi escolhida</th></tr>
+    <tr><td><code>TreeMap&lt;Integer, Participante&gt;</code> em <code>Planejamento</code></td><td>Código único garantido pela chave; busca em O(log n); iteração em ordem de código.</td></tr>
+    <tr><td><code>ArrayList&lt;Despesa&gt;</code> em <code>Planejamento</code></td><td>Mantém a ordem de inclusão e permite editar e excluir por posição na tabela.</td></tr>
+    <tr><td><code>TreeSet&lt;Participante&gt;</code> em <code>Despesa</code></td><td>Impede repetição e itera em ordem crescente de código, necessária para distribuir os centavos.</td></tr>
+    <tr><td><code>TreeMap&lt;Participante, Long&gt;</code> (rateio)</td><td>Resultado do rateio já ordenado por código.</td></tr>
+    <tr><td><code>HashSet&lt;Integer&gt;</code> (validação)</td><td>Detecta código repetido na seleção em tempo constante.</td></tr>
+  </table>
+  <div class="fonte">Fonte: os autores (2026).</div>
+</div>
+
+<h3>3.3 Persistência e tratamento de falhas</h3>
+<p>As classes de dados (<code>Planejamento</code>, <code>Participante</code>, <code>Despesa</code> e subclasses)
+implementam <code>Serializable</code> com <code>serialVersionUID</code> (BLOCH, 2018; ORACLE, [s.d.]b). Todo o
+grafo é gravado em um único <code>ObjectOutputStream</code>; por isso as referências compartilhadas são
+preservadas na leitura (a despesa aponta para o mesmo objeto <code>Participante</code> da lista) e nada é
+duplicado. A gravação usa arquivo temporário e <code>Files.move</code>, de modo que uma falha não destrói o
+arquivo anterior, e os fluxos são fechados com <i>try-with-resources</i>. Ao carregar, o planejamento em uso só é
+substituído depois da leitura completa: arquivo ausente, inválido, vazio ou corrompido gera mensagem e preserva o
+planejamento atual. Resumo e simulação não são persistidos, e sim recalculados.</p>
+
+<h3>3.4 Simulador de alternativas (objetivo extra)</h3>
+<p>Cada despesa é essencial ou opcional (com prioridade inteira positiva). O algoritmo mantém todas as
+essenciais e testa por busca exaustiva os 2<sup>k</sup> subconjuntos das <i>k</i> opcionais (<i>k</i> ≤ 10, no
+máximo 1.024 combinações): para cada um soma, por participante, essenciais mais opcionais escolhidas; o
+subconjunto é viável se ninguém ultrapassa o orçamento (igual ao limite é aceito) e vence o de maior soma de
+prioridades (o primeiro encontrado em caso de empate). Antes disso verifica se as essenciais sozinhas já estouram
+algum orçamento; se sim, informa o excesso de cada participante e a ausência de solução. A complexidade é
+O(2<sup>k</sup>·k·n) e o planejamento original nunca é alterado, pois o resultado é um novo <code>Resumo</code>.</p>
+
+<!-- ===================== 4 TESTES ===================== -->
+<h2>4 Testes e resultados</h2>
+<p>Os testes são automatizados (<code>TestesRunner</code>, sem dependências) e gravam entrada, resultado
+esperado, resultado obtido e situação em <code>docs/evidencias-testes.md</code>; a execução inteira tem 43
+verificações e todas foram aprovadas. A reprodução é <code>./scripts/testes.sh</code>, descrita no README. As
+capturas vêm da interface real (<code>./scripts/capturas.sh</code>). Os identificadores E<i>n</i> abaixo são os
+números das linhas do arquivo de evidências.</p>
+
+<h3>4.1 Caso de referência</h3>
+<p>Com os dados da seção 4 do enunciado, os valores obtidos são exatamente os esperados (Tabela 3 e Figura 3):
+custo total de R$ 210,00; Ana e Carla excedem o orçamento em R$ 5,00 cada; Bruno fica dentro, com total igual ao
+orçamento. Não houve divergência em relação ao enunciado (evidências E1 a E3).</p>
+
+<div class="tab evitar">
+  <div class="cap">Tabela 3 – Caso de referência: valores obtidos (R$)</div>
+  <table>
+    <tr><th>Pessoa</th><th class="n">Transporte</th><th class="n">Almoço</th><th class="n">Atividade</th><th class="n">Sobremesa</th><th class="n">Total</th><th class="n">Orçamento</th><th>Situação</th></tr>
+    <tr><td>Ana</td><td class="n">30,00</td><td class="n">20,00</td><td class="n">15,00</td><td class="n">10,00</td><td class="n">75,00</td><td class="n">70,00</td><td>Excede em 5,00</td></tr>
+    <tr><td>Bruno</td><td class="n">30,00</td><td class="n">20,00</td><td class="n">0,00</td><td class="n">10,00</td><td class="n">60,00</td><td class="n">60,00</td><td>Dentro do orçamento</td></tr>
+    <tr><td>Carla</td><td class="n">30,00</td><td class="n">20,00</td><td class="n">15,00</td><td class="n">10,00</td><td class="n">75,00</td><td class="n">70,00</td><td>Excede em 5,00</td></tr>
+  </table>
+  <div class="fonte">Fonte: aplicação (E1 a E3). Custo total: R$ 210,00.</div>
+</div>
+
+<figure>
+  <div class="cap">Figura 3 – Aba Resumo com o caso de referência</div>
+  <img src="../capturas/03-resumo.png" alt="Aba Resumo" style="width: 14.6cm;">
+  <div class="fonte">Fonte: captura da aplicação (docs/capturas/03-resumo.png).</div>
+</figure>
+
+<h3>4.2 Testes adicionais</h3>
+<div class="tab">
+  <div class="cap">Tabela 4 – Testes adicionais: entrada, esperado, obtido e evidência</div>
+  <table>
+    <tr><th style="width:12%">Cenário</th><th style="width:27%">Entrada</th><th style="width:25%">Esperado</th><th style="width:27%">Obtido</th><th style="width:9%">Evid.</th></tr>
+    <tr><td>Centavos no rateio</td><td>Despesa fixa de R$ 100,00 para os códigos 1, 2 e 3 (informados fora de ordem)</td><td>R$ 33,34, R$ 33,33 e R$ 33,33; soma R$ 100,00</td><td>R$ 33,34, R$ 33,33 e R$ 33,33; soma R$ 100,00. Com R$ 10,01 entre os códigos 2 e 3: R$ 5,01 e R$ 5,00</td><td>E4, E5<br><span class="ok">OK</span></td></tr>
+    <tr><td>Entrada ou vínculo inválido</td><td>15 tentativas: despesa sem participantes, valor negativo, zero, vazio, não numérico ou com 3 casas, descrição vazia, código inexistente ou repetido; participante com código duplicado, nome ou orçamento vazio, orçamento negativo, código não numérico ou vazio</td><td>Todas recusadas com mensagem; dados e totais inalterados</td><td>15 de 15 recusadas; estado completo e totais idênticos aos de antes; mensagem exibida: &ldquo;A despesa deve ter pelo menos um participante.&rdquo; (Figura 4)</td><td>E6 a E8<br><span class="ok">OK</span></td></tr>
+    <tr><td>Alteração de orçamento</td><td>Orçamento de Ana de R$ 70,00 para R$ 80,00</td><td>Custo de Ana segue R$ 75,00, agora dentro do limite</td><td>Total R$ 75,00; dentro do orçamento; excesso R$ 0,00. Nome alterado aparece nas despesas</td><td>E9, E10<br><span class="ok">OK</span></td></tr>
+    <tr><td>Exclusão de despesa</td><td>Excluir &ldquo;Atividade recreativa&rdquo; do caso original</td><td>R$ 60,00 por pessoa; total R$ 180,00</td><td>Ana, Bruno e Carla R$ 60,00 cada; custo total R$ 180,00</td><td>E11<br><span class="ok">OK</span></td></tr>
+    <tr><td>Salvar e reiniciar</td><td>Salvar o caso, iniciar controlador novo e carregar (duas vezes)</td><td>Todos os dados, vínculos e resultados, sem duplicar</td><td>3 participantes, 4 despesas, mesmos totais; mesmo objeto <code>Participante</code> na lista e na despesa; estado idêntico</td><td>E12 a E15<br><span class="ok">OK</span></td></tr>
+    <tr><td>Problema no arquivo</td><td>Arquivo ausente; texto qualquer; arquivo vazio; salvar em pasta inexistente; novo planejamento</td><td>Mensagem clara; planejamento em uso preservado; permite iniciar vazio</td><td>Mensagem em todos os casos; estado idêntico após as falhas; planejamento vazio com 0 participantes, 0 despesas e custo R$ 0,00</td><td>E16 a E21<br><span class="ok">OK</span></td></tr>
+    <tr><td>Regras de vínculo e edição</td><td>Excluir Bruno com despesas; editar a atividade para &ldquo;por pessoa&rdquo; de R$ 30,00; edição inválida</td><td>Exclusão impedida; totais recalculados; despesa intacta na edição inválida</td><td>Exclusão impedida; R$ 90,00 para cada um, total R$ 270,00; estado idêntico; soma dos totais individuais = custo total</td><td>E22 a E26<br><span class="ok">OK</span></td></tr>
+  </table>
+  <div class="fonte">Fonte: docs/evidencias-testes.md. Os valores digitados (<code>70</code>, <code>70,5</code>, <code>R$ 1.234,56</code> etc.) também foram verificados (E27).</div>
+</div>
+
+<figure>
+  <div class="cap">Figura 4 – Mensagem de validação ao incluir despesa sem participantes</div>
+  <img src="../capturas/05-erro-validacao.png" alt="Mensagem de validação" style="width: 14.2cm;">
+  <div class="fonte">Fonte: captura da aplicação (docs/capturas/05-erro-validacao.png).</div>
+</figure>
+
+<h3>4.3 Simulador e cenário da equipe</h3>
+<p>No caso de referência, o simulador retira a sobremesa e mantém a atividade (prioridade 3): Ana e Carla pagam
+R$ 65,00 e Bruno R$ 50,00, total R$ 180,00, todos dentro do orçamento. Com o orçamento de Ana em R$ 40,00 não há
+solução, pois as essenciais custam R$ 50,00 (Figura 5). No cenário &ldquo;Dia de praia&rdquo; (Tabela 5), van e
+almoço são essenciais e custam R$ 97,50 por pessoa; a melhor combinação é buggy mais água de coco (prioridade 6),
+que vence barraca mais fotos (prioridade 5), embora as duas combinações caibam nos orçamentos.</p>
+
+<div class="tab evitar">
+  <div class="cap">Tabela 5 – Cenário da equipe (&ldquo;Dia de praia&rdquo;): totais por participante (R$)</div>
+  <table>
+    <tr><th>Participante</th><th class="n">Orçamento</th><th class="n">Total original</th><th>Situação original</th><th class="n">Total após simular</th><th>Situação após simular</th></tr>
+    <tr><td>Evando</td><td class="n">155,00</td><td class="n">199,34</td><td>Excede em 44,34</td><td class="n">146,00</td><td>Dentro</td></tr>
+    <tr><td>Marcelo</td><td class="n">155,00</td><td class="n">159,33</td><td>Excede em 4,33</td><td class="n">106,00</td><td>Dentro</td></tr>
+    <tr><td>Isac</td><td class="n">150,00</td><td class="n">179,33</td><td>Excede em 29,33</td><td class="n">146,00</td><td>Dentro</td></tr>
+    <tr><td>D'jonathan</td><td class="n">130,00</td><td class="n">126,00</td><td>Dentro</td><td class="n">106,00</td><td>Dentro</td></tr>
+  </table>
+  <div class="fonte">Fonte: aplicação (E33, E34, E36). Custo total original R$ 664,00; após simular R$ 504,00 (mantém van, almoço, buggy e água de coco; retira barraca e fotos).</div>
+</div>
+
+<div class="tab evitar">
+  <div class="cap">Tabela 6 – Testes do simulador</div>
+  <table>
+    <tr><th style="width:27%">Cenário</th><th>Resultado obtido (igual ao esperado)</th><th style="width:10%">Evid.</th></tr>
+    <tr><td>Caso de referência</td><td>Retira sobremesa; R$ 65,00 / 50,00 / 65,00; total R$ 180,00; prioridade 3; original preservado (4 despesas, mesmos totais)</td><td>E28 a E30</td></tr>
+    <tr><td>Ana com R$ 40,00 (sem solução)</td><td>Sem solução; Ana excede em R$ 10,00</td><td>E31</td></tr>
+    <tr><td>Equipe: melhor combinação</td><td>Buggy + água de coco; prioridade 6; confere com busca recursiva independente; original preservado</td><td>E36 a E38</td></tr>
+    <tr><td>Equipe: limite exato (Isac R$ 146,00)</td><td>Total igual ao orçamento é aceito; prioridade segue 6</td><td>E39</td></tr>
+    <tr><td>Equipe: um centavo abaixo (Isac R$ 145,99)</td><td>Combinação muda; prioridade 5, igual à busca independente; todos dentro</td><td>E40</td></tr>
+    <tr><td>Equipe: D'jonathan com R$ 90,00</td><td>Sem solução; D'jonathan excede em R$ 7,50 (essenciais custam R$ 97,50)</td><td>E41</td></tr>
+    <tr><td>Cenário extra com 4 opcionais de prioridades diferentes</td><td>Prioridade 13, igual à busca independente</td><td>E32</td></tr>
+  </table>
+  <div class="fonte">Fonte: docs/evidencias-testes.md. Os arquivos de exemplo em <code>data/</code> também carregam e reproduzem os totais (E42, E43).</div>
+</div>
+
+<figure>
+  <div class="cap">Figura 5 – Simulador sem solução (caso de referência com Ana em R$ 40,00)</div>
+  <img src="../capturas/06-simulador-sem-solucao.png" alt="Simulador sem solução" style="width: 14.2cm;">
+  <div class="fonte">Fonte: captura da aplicação (docs/capturas/06-simulador-sem-solucao.png).</div>
+</figure>
+
+<figure>
+  <div class="cap">Figura 6 – Simulador no cenário da equipe</div>
+  <img src="../capturas/08-equipe-simulador.png" alt="Simulador no cenário da equipe" style="width: 14.2cm;">
+  <div class="fonte">Fonte: captura da aplicação (docs/capturas/08-equipe-simulador.png).</div>
+</figure>
+
+<!-- ===================== 5 AVALIAÇÃO ===================== -->
+<h2>5 Avaliação e melhorias</h2>
+<p><b>Decisões de POO.</b> A classe abstrata <code>Despesa</code> concentra o que é comum (validação, participantes,
+classificação) e deixa para as subclasses apenas o que varia, o rateio; novos tipos de despesa exigem apenas
+uma nova subclasse e uma opção na fábrica. A imutabilidade de <code>Despesa</code> e a validação antes de
+qualquer mudança simplificaram a consistência. A interface de persistência desacopla o controlador do formato de
+arquivo, e o resumo sempre recalculado evita totais desatualizados.</p>
+<p><b>Dificuldades e correções.</b> (1) Com seis despesas, os cabeçalhos da tabela de resumo apareciam cortados
+(&ldquo;Passeio d&hellip;&rdquo;); as colunas passaram a se ajustar ao conteúdo, com rolagem horizontal quando
+não cabem. (2) Na validação do teste de edição, o resultado esperado estava digitado errado (R$ 255,00); a
+conferência manual (três pessoas × R$ 30,00 mais as demais despesas) confirmou que o programa estava correto
+(R$ 270,00) e o teste foi corrigido, o que reforça que cada valor esperado precisa ser calculado independentemente
+do código. (3) A serialização amarra o arquivo à versão das classes; por isso há <code>serialVersionUID</code> e um
+gerador dos arquivos de exemplo. (4) Um texto como <code>1.234</code> é ambíguo (milhar ou decimal); o programa o
+trata como decimal e recusa com mensagem clara por ter três casas.</p>
+<p><b>Comparação com o caso de referência e aprendizado.</b> Todos os valores da seção 4 coincidiram, sem
+divergência. Validar o cenário próprio mostrou que o simulador pode preferir uma combinação que parece menos
+atraente (buggy mais água de coco, prioridade 6, contra barraca mais fotos, prioridade 5), e que um único centavo no
+orçamento (R$ 145,99 em vez de R$ 146,00) muda a resposta, o que justifica tratar &ldquo;igual ao limite&rdquo;
+como dentro do orçamento e testar as duas bordas.</p>
+<p><b>Limitações e melhorias.</b> Há um planejamento por vez, sem desfazer e refazer, com divisão sempre
+igualitária e uma só moeda; o arquivo é binário, ilegível por humanos e dependente das classes; o simulador
+aceita até dez opcionais; não há testes automatizados da interface além das capturas. Melhorias mais úteis ao
+público: exportar o resumo (CSV ou PDF) para enviar ao grupo, salvar em formato textual (JSON), usar JUnit,
+dividir por pesos ou percentuais e sugerir ajustes de valores além de retirar despesas.</p>
+<p><b>Uso de ferramentas de IA.</b> O código-base e parte da documentação foram produzidos com apoio de IA
+generativa (ANTHROPIC, 2026). <mark class="pend">[A equipe deve revisar e reescrever este parágrafo com a
+verdade do grupo: o que cada integrante revisou, executou e compreendeu, e quais decisões de modelagem e
+análise foram da equipe. A atividade exige que a equipe assuma a condução do projeto.]</mark></p>
+
+<h3>5.1 Contribuição dos integrantes</h3>
+<div class="tab evitar">
+  <div class="cap">Tabela 7 – Contribuições por integrante</div>
+  <table>
+    <tr><th style="width:22%">Integrante</th><th>Implementação</th><th>Integração</th><th>Validação</th><th>Documentação</th></tr>
+    <tr><td><mark class="pend">[Nome 1]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td></tr>
+    <tr><td><mark class="pend">[Nome 2]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td></tr>
+    <tr><td><mark class="pend">[Nome 3]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td></tr>
+    <tr><td><mark class="pend">[Nome 4]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td><td><mark class="pend">[preencher]</mark></td></tr>
+  </table>
+  <div class="fonte">Fonte: os autores (2026).</div>
+</div>
+
+<h2>Referências</h2>
+<div class="refs">
+  <p>ANTHROPIC. <b>Claude Code</b>: software de codificação assistida por IA. 2026. Disponível em: https://claude.com/claude-code. Acesso em: 23 nov. 2026.</p>
+  <p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <b>NBR 6023</b>: informação e documentação: referências: elaboração. Rio de Janeiro: ABNT, 2018.</p>
+  <p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <b>NBR 10520</b>: informação e documentação: citações em documentos: apresentação. Rio de Janeiro: ABNT, 2023.</p>
+  <p>BLOCH, Joshua. <b>Effective Java</b>. 3. ed. Boston: Addison-Wesley, 2018.</p>
+  <p>DEITEL, Paul; DEITEL, Harvey. <b>Java</b>: como programar. 10. ed. São Paulo: Pearson, 2017.</p>
+  <p>FOWLER, Martin. <b>UML essencial</b>: um breve guia para a linguagem-padrão de modelagem de objetos. 3. ed. Porto Alegre: Bookman, 2005.</p>
+  <p>ORACLE. <b>The Java Tutorials</b>: creating a GUI with Swing. [S. l.]: Oracle, [s.d.]a. Disponível em: https://docs.oracle.com/javase/tutorial/uiswing/. Acesso em: 23 nov. 2026.</p>
+  <p>ORACLE. <b>Java Object Serialization Specification</b>: Java SE 11. [S. l.]: Oracle, [s.d.]b. Disponível em: https://docs.oracle.com/en/java/javase/11/docs/specs/serialization. Acesso em: 23 nov. 2026.</p>
+  <p><mark class="pend">[INSTITUIÇÃO]</mark>. <b>Atividade final de Programação Orientada a Objetos</b>: Cabe no bolso: planejador de despesas compartilhadas. 2026. Proposta de atividade.</p>
+</div>
+
+</body>
+</html>

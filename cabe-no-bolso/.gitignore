@@ -1,0 +1,10 @@
+# classes compiladas
+out/
+*.class
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
