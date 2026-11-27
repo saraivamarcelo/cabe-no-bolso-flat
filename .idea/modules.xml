@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/cabe-no-bolso-para-intellij.iml" filepath="$PROJECT_DIR$/.idea/cabe-no-bolso-para-intellij.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cabe-no-bolso/src/main/main.iml" filepath="$PROJECT_DIR$/cabe-no-bolso/src/main/main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cabe-no-bolso/src/test/test.iml" filepath="$PROJECT_DIR$/cabe-no-bolso/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cabe-no-bolso.iml" filepath="$PROJECT_DIR$/cabe-no-bolso.iml" />
     </modules>
   </component>
 </project>

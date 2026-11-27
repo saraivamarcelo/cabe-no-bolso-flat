@@ -43,7 +43,7 @@
 | 39 | Cenário da equipe - limite exato é aceito | Orçamento de Isac reduzido para R$ 146,00 (igual ao total da melhor combinação) | prioridade=6 | prioridade=6 | OK |
 | 40 | Cenário da equipe - um centavo abaixo do limite | Orçamento de Isac reduzido para R$ 145,99 | prioridade=5 (força bruta: 5); todos dentro do orçamento | prioridade=5 (força bruta: 5); todos dentro do orçamento | OK |
 | 41 | Cenário da equipe - sem solução | Orçamento de D'jonathan reduzido para R$ 90,00 (essenciais custam R$ 97,50) | sem solução; D'jonathan excede em R$ 7,50 | sem solução; D'jonathan excede em R$ 7,50 | OK |
-| 42 | Arquivo de exemplo data/caso-referencia.dat | Carregar o arquivo versionado no repositório e conferir os totais | Ana=R$ 75,00; Bruno=R$ 60,00; Carla=R$ 75,00; custo total=R$ 210,00 | FALHA: Arquivo não encontrado: data\caso-referencia.dat (execute a partir da raiz do projeto) | FALHOU |
-| 43 | Arquivo de exemplo data/cenario-equipe.dat | Carregar o arquivo versionado no repositório e conferir os totais | Evando=R$ 199,34; Marcelo=R$ 159,33; Isac=R$ 179,33; D'jonathan=R$ 126,00; custo total=R$ 664,00 | FALHA: Arquivo não encontrado: data\cenario-equipe.dat (execute a partir da raiz do projeto) | FALHOU |
+| 42 | Arquivo de exemplo data/caso-referencia.dat | Carregar o arquivo versionado no repositório e conferir os totais | Ana=R$ 75,00; Bruno=R$ 60,00; Carla=R$ 75,00; custo total=R$ 210,00 | Ana=R$ 75,00; Bruno=R$ 60,00; Carla=R$ 75,00; custo total=R$ 210,00 | OK |
+| 43 | Arquivo de exemplo data/cenario-equipe.dat | Carregar o arquivo versionado no repositório e conferir os totais | Evando=R$ 199,34; Marcelo=R$ 159,33; Isac=R$ 179,33; D'jonathan=R$ 126,00; custo total=R$ 664,00 | Evando=R$ 199,34; Marcelo=R$ 159,33; Isac=R$ 179,33; D'jonathan=R$ 126,00; custo total=R$ 664,00 | OK |
 
-**Total: 43 verificações, 41 aprovadas, 2 falhas.**
+**Total: 43 verificações, 43 aprovadas, 0 falhas.**
